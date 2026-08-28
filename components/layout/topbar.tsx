@@ -26,6 +26,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { JURISDICTIONS, LANGUAGES } from "@/lib/demo-data";
 import { useSidebar } from "./sidebar-context";
+import { useLanguage } from "./language-context";
 import { toast } from "sonner";
 
 interface TopbarProps {
@@ -34,13 +35,12 @@ interface TopbarProps {
 
 export function Topbar({ title }: TopbarProps) {
   const { toggle, isMobile } = useSidebar();
+  const { language, setLanguage } = useLanguage();
   const [jurisdiction, setJurisdiction] = useState("india");
-  const [language, setLanguage] = useState("en");
 
   const currentJurisdiction = JURISDICTIONS.find(
     (j) => j.value === jurisdiction
   );
-  const currentLang = LANGUAGES.find((l) => l.value === language);
 
   const handleLanguageChange = (val: string, label: string) => {
     setLanguage(val);
@@ -141,26 +141,27 @@ export function Topbar({ title }: TopbarProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-1.5 text-xs font-medium hidden md:flex"
+                className="gap-1.5 text-xs font-medium hidden md:flex no-translate"
+                translate="no"
               >
                 <Globe className="size-3.5" />
-                <span>{currentLang?.label}</span>
+                <span>{language.label}</span>
                 <ChevronDown className="size-3 text-warm-muted" />
               </Button>
             }
           />
-          <DropdownMenuContent align="end" className="w-36">
+          <DropdownMenuContent align="end" className="w-44 max-h-[300px] overflow-y-auto no-translate" translate="no">
             {LANGUAGES.map((l) => (
               <DropdownMenuItem
                 key={l.value}
                 onClick={() => handleLanguageChange(l.value, l.label)}
                 className={cn(
                   "flex justify-between",
-                  l.value === language && "bg-forest/5 text-forest font-medium"
+                  l.value === language.value && "bg-forest/5 text-forest font-medium"
                 )}
               >
                 <span>{l.label}</span>
-                {l.value === language && (
+                {l.value === language.value && (
                   <span className="text-forest font-bold">✓</span>
                 )}
               </DropdownMenuItem>

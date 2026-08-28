@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageProvider } from "@/components/layout/language-context";
+import { AutoTranslator } from "@/components/layout/auto-translator";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,13 +26,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className="scroll-smooth"
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
-        <TooltipProvider delay={300}>
-          {children}
-          <Toaster />
-        </TooltipProvider>
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-cream min-h-screen text-charcoal flex flex-col`}
+      >
+        <LanguageProvider>
+          <AutoTranslator />
+          <TooltipProvider delay={300}>
+            {children}
+            <Toaster 
+              position="top-right" 
+              toastOptions={{
+                className: "border-warm-border bg-white text-charcoal",
+                descriptionClassName: "text-muted-foreground",
+              }}
+            />
+          </TooltipProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

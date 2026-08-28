@@ -101,11 +101,11 @@ interface AppSidebarContentProps {
   onNavigate?: () => void;
 }
 
+import { useLanguage } from "./language-context";
+
 export function AppSidebarContent({ onNavigate }: AppSidebarContentProps) {
   const pathname = usePathname();
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
-
-  const currentLang = LANGUAGES.find((l) => l.value === selectedLanguage);
+  const { language, setLanguage } = useLanguage();
 
   return (
     <div className="flex h-full flex-col">
@@ -162,22 +162,25 @@ export function AppSidebarContent({ onNavigate }: AppSidebarContentProps) {
       <div className="mt-auto border-t border-warm-border p-3 space-y-3">
         {/* Language selector */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-warm-muted hover:bg-cream hover:text-charcoal transition-colors">
-            <span>{currentLang?.label ?? "English"}</span>
+          <DropdownMenuTrigger 
+            className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-warm-muted hover:bg-cream hover:text-charcoal transition-colors no-translate"
+            translate="no"
+          >
+            <span>{language.label}</span>
             <ChevronDown className="size-3.5" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
+          <DropdownMenuContent align="start" className="w-48 max-h-[300px] overflow-y-auto no-translate" translate="no">
             {LANGUAGES.map((lang) => (
               <DropdownMenuItem
                 key={lang.value}
-                onSelect={() => setSelectedLanguage(lang.value)}
+                onSelect={() => setLanguage(lang.value)}
                 className={cn(
                   "flex justify-between",
-                  lang.value === selectedLanguage && "bg-forest/5 text-forest font-medium"
+                  lang.value === language.value && "bg-forest/5 text-forest font-medium"
                 )}
               >
                 <span>{lang.label}</span>
-                {lang.value === selectedLanguage && (
+                {lang.value === language.value && (
                   <span className="text-forest font-bold">✓</span>
                 )}
               </DropdownMenuItem>
