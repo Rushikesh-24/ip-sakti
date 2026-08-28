@@ -18,16 +18,9 @@ import {
   Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NAV_ITEMS, LANGUAGES } from "@/lib/demo-data";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { NAV_ITEMS } from "@/lib/demo-data";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   home: Home,
@@ -105,7 +98,6 @@ import { useLanguage } from "./language-context";
 
 export function AppSidebarContent({ onNavigate }: AppSidebarContentProps) {
   const pathname = usePathname();
-  const { language, setLanguage } = useLanguage();
 
   return (
     <div className="flex h-full flex-col">
@@ -160,33 +152,6 @@ export function AppSidebarContent({ onNavigate }: AppSidebarContentProps) {
 
       {/* Bottom section */}
       <div className="mt-auto border-t border-warm-border p-3 space-y-3">
-        {/* Language selector */}
-        <DropdownMenu>
-          <DropdownMenuTrigger 
-            className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-warm-muted hover:bg-cream hover:text-charcoal transition-colors no-translate"
-            translate="no"
-          >
-            <span>{language.label}</span>
-            <ChevronDown className="size-3.5" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48 max-h-[300px] overflow-y-auto no-translate" translate="no">
-            {LANGUAGES.map((lang) => (
-              <DropdownMenuItem
-                key={lang.value}
-                onSelect={() => setLanguage(lang.value)}
-                className={cn(
-                  "flex justify-between",
-                  lang.value === language.value && "bg-forest/5 text-forest font-medium"
-                )}
-              >
-                <span>{lang.label}</span>
-                {lang.value === language.value && (
-                  <span className="text-forest font-bold">✓</span>
-                )}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
 
         {/* User profile */}
         <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">

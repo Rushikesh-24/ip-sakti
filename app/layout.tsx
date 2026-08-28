@@ -36,11 +36,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AutoTranslator />
           <TooltipProvider delay={300}>
             {children}
-            <Toaster 
-              position="top-right" 
+            <Toaster
+              position="top-right"
               toastOptions={{
                 className: "border-warm-border bg-white text-charcoal",
-                descriptionClassName: "text-muted-foreground",
+                descriptionClassName: "!text-stone-800",
               }}
             />
           </TooltipProvider>
