@@ -157,32 +157,35 @@ export function AutoTranslator() {
           }),
         });
 
-        if (response.ok) {
-          const { translatedTexts } = await response.json();
-          
-          if (translatedTexts && translatedTexts.length === batch.length) {
-            const cache = getCache();
-            if (!cache[language.value]) cache[language.value] = {};
+        if (!response.ok) {
+          console.error("Translation API error:", await response.text());
+          continue;
+        }
 
-            batch.forEach((text, index) => {
-              const translated = translatedTexts[index];
-              cache[language.value][text] = translated;
+        const { translatedTexts } = await response.json();
 
-              // Update all nodes for this text
-              const nodes = textToNodes.get(text) || [];
-              nodes.forEach((node) => {
-                if (document.contains(node)) {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  const original = (node as any).__originalText;
-                  const leadingSpace = original.match(/^\s*/)?.[0] || "";
-                  const trailingSpace = original.match(/\s*$/)?.[0] || "";
-                  node.nodeValue = leadingSpace + translated + trailingSpace;
-                }
-              });
+        if (translatedTexts && translatedTexts.length === batch.length) {
+          const cache = getCache();
+          if (!cache[language.value]) cache[language.value] = {};
+
+          batch.forEach((text, index) => {
+            const translated = translatedTexts[index];
+            cache[language.value][text] = translated;
+
+            // Update all nodes for this text
+            const nodes = textToNodes.get(text) || [];
+            nodes.forEach((node) => {
+              if (document.contains(node)) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const original = (node as any).__originalText;
+                const leadingSpace = original.match(/^\s*/)?.[0] || "";
+                const trailingSpace = original.match(/\s*$/)?.[0] || "";
+                node.nodeValue = leadingSpace + translated + trailingSpace;
+              }
             });
+          });
 
-            saveCache(cache);
-          }
+          saveCache(cache);
         }
       } catch (err) {
         console.error("Batch translation failed", err);
